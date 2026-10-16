@@ -87,8 +87,17 @@ git push
 3. 创建 Pages 项目：`npx wrangler pages project create my-portfolio --production-branch=main`
 4. 部署：`.\deploy.cmd`
 
-> 若第 3 步报 `Your user email must been verified`，说明 Cloudflare 账号邮箱还没验证：
-> 去注册邮箱（`3286505484@qq.com`）点 Cloudflare 的验证链接，或在 Cloudflare 控制台右上角重新发送验证邮件，之后重试即可。
+> **若第 3 步报 `Your user email must been verified`（错误码 8000077）**，说明 Cloudflare 账号邮箱还没验证，此时任何 Pages 项目都建不出来（API 直接返回 403）。按官方文档操作：
+>
+> 1. 打开 <https://dash.cloudflare.com/profile>（或首页右上角头像 → **My Profile**）
+> 2. 找到 **Email Address** 一行
+>    - 邮箱后面带 `(verified)` → 已经验证过，可直接重试第 3 步
+>    - 旁边有 **Send verification email** 按钮 → 点它
+> 3. 去注册邮箱（`3286505484@qq.com`）收信，**收件箱 / 垃圾箱 / 广告邮件 / 订阅邮件**都翻一遍，找发件人含 `cloudflare` 的验证邮件
+> 4. 点邮件里的验证链接（**保持已登录 Cloudflare 状态**点），页面提示验证成功即可
+> 5. 若链接提示失效：换浏览器或无痕窗口重试，或第 2 步重新发一封
+>
+> 验证通过后重新执行 `.\deploy.cmd` 即可。
 
 ---
 
