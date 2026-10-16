@@ -1,21 +1,25 @@
 # 个人作品集（my-portfolio）
 
 极简静态个人作品集网站：纯 HTML / CSS / JS，无框架、无构建步骤、手机端适配。
-部署于 **Cloudflare Pages**，源码托管在 **GitHub**。
 
-- GitHub：<https://github.com/zx969/my-portfolio>
-- 线上地址（主）：`https://my-portfolio.pages.dev` —— Cloudflare Pages，待账号邮箱验证完成后生效
-- 线上地址（备用）：`https://zx969.github.io/my-portfolio/` —— GitHub Pages，同一份代码的镜像
+| 项目 | 地址 | 状态 |
+| --- | --- | --- |
+| 线上地址（现在可用） | <https://zx969.github.io/my-portfolio/> | ✅ GitHub Pages 已上线 |
+| GitHub 仓库 | <https://github.com/zx969/my-portfolio> | ✅ public，main 分支 |
+| Cloudflare Workers | `https://my-portfolio.zx969.workers.dev` | ⏳ 已配置完成，等账号邮箱验证后 `deploy.cmd` 一键上线 |
+| Cloudflare Pages | `https://my-portfolio.pages.dev` | ⏳ 同上，见文末「Cloudflare 部署状态」 |
 
 ```
 .
 ├── index.html          # 单页：关于我 / 项目经历 / 实习经历 / 人生支点 / 联系方式
 ├── assets/
-│   ├── styles.css      # 全部样式（含深色模式、响应式断点 720px / 1000px）
-│   ├── main.js         # 移动端菜单、滚动高亮、出现动画、年份
+│   ├── styles.css      # 全部样式（深色模式、响应式断点 720px / 1000px）
+│   ├── main.js         # 移动端菜单、滚动高亮、出现动画、页脚年份
 │   └── favicon.svg     # 站点图标
-├── deploy.cmd          # 一键部署到 Cloudflare Pages
-├── package.json        # 只用于安装 wrangler（部署工具），页面本身不需要构建
+├── wrangler.jsonc      # Cloudflare Workers 静态资源配置
+├── deploy.cmd          # 一键部署到 Cloudflare Workers
+├── deploy-pages.cmd    # 一键部署到 Cloudflare Pages（等邮箱验证后可用）
+├── package.json        # 只为安装 wrangler（部署工具），页面本身不需要构建
 └── README.md
 ```
 
@@ -23,7 +27,7 @@
 
 ## 一、先把占位符换成你的真实内容
 
-页面里所有待填内容都写成 `【...】` 形式，全局搜索 `【` 即可逐条替换（当前还有 53 种、74 处）。
+页面里所有待填内容都写成 `【...】` 形式，全局搜索 `【` 即可逐条替换（当前 **53 种、74 处**）。
 
 | 位置 | 占位符 | 说明 |
 | --- | --- | --- |
@@ -62,49 +66,60 @@ python -m http.server 4321     # 或： npx --yes serve .
 
 ---
 
-## 三、更新并上线（日常只需要这两步）
+## 三、更新并上线（日常两条命令）
 
 ```powershell
-# 1) 提交到 GitHub
+cd "C:\Users\FIREBAT\Desktop\新建文件夹 (4)"
+
+# 1) 提交：GitHub 上的代码更新，同时 GitHub Pages 会自动重新发布
 git add -A
 git commit -m "update: 填写了项目经历"
 git push
 
-# 2) 部署到 Cloudflare Pages（双击 deploy.cmd 也可以）
-.\deploy.cmd
+# 2) 同步到 Cloudflare（账号邮箱验证通过后可用；双击 deploy.cmd 也一样）
+.\deploy.cmd          # → Cloudflare Workers
+.\deploy-pages.cmd    # → Cloudflare Pages（可选，二者内容相同）
 ```
 
-`deploy.cmd` 做的事：把 `index.html` + `assets/` 复制到临时目录 `_deploy/`（避免把 `.git`、`node_modules` 传上去）→ 用 wrangler 上传 → 打印新的线上地址。
-每部署一次会生成一个新地址（形如 `https://<hash>.my-portfolio.pages.dev`），生产地址始终是 `https://my-portfolio.pages.dev`。
+`deploy.cmd` 做的事：把 `index.html` + `assets/` 复制到 `_deploy/`（避免把 `.git`、`node_modules` 传上去）→ 用 wrangler 发布 → 打印线上地址。
 
 ---
 
-## 四、首次部署记录（已经做过的事，换电脑时才需要重做）
+## 四、Cloudflare 部署状态（当前唯一卡点）
 
-1. `npm install` —— 安装 wrangler（部署工具）。
-2. 登录 Cloudflare：`npx wrangler login --device`，浏览器里打开提示的链接、输入设备码授权。
-   登录凭据保存在项目内的 `.cf-config/`（已在 `.gitignore` 中，**不要把整个文件夹打包发给别人**）。
-3. 创建 Pages 项目：`npx wrangler pages project create my-portfolio --production-branch=main`
-4. 部署：`.\deploy.cmd`
+**现象**：Cloudflare 拒绝创建任何 Pages 项目 / 发布任何 Worker，服务端原文：
 
-> **若第 3 步报 `Your user email must been verified`（错误码 8000077）**，说明 Cloudflare 账号邮箱还没验证，此时任何 Pages 项目都建不出来（API 直接返回 403）。按官方文档操作：
->
-> 1. 打开 <https://dash.cloudflare.com/profile>（或首页右上角头像 → **My Profile**）
-> 2. 找到 **Email Address** 一行
->    - 邮箱后面带 `(verified)` → 已经验证过，可直接重试第 3 步
->    - 旁边有 **Send verification email** 按钮 → 点它
-> 3. 去注册邮箱（`3286505484@qq.com`）收信，**收件箱 / 垃圾箱 / 广告邮件 / 订阅邮件**都翻一遍，找发件人含 `cloudflare` 的验证邮件
-> 4. 点邮件里的验证链接（**保持已登录 Cloudflare 状态**点），页面提示验证成功即可
-> 5. 若链接提示失效：换浏览器或无痕窗口重试，或第 2 步重新发一封
->
-> 验证通过后重新执行 `.\deploy.cmd` 即可。
+- Pages：`HTTP 403` · `code: 8000077` · `Your user email must been verified`
+- Workers：`code: 10034` · `You need to verify your email address to use Workers`
+
+**已排除的原因**（都实测过）：wranger 版本、网络、项目名、令牌过期（重新登录换新令牌后仍报错）、以及 PowerShell/沙箱环境——用 REST API 直连（完全绕开 wrangler）同样是这两个错误码。
+
+**根因**：账号 `3286505484@qq.com`（2026-10-16 17:06 注册）在 Cloudflare 服务端的"邮箱已验证"标记为否。而 My Profile 页面里只有 `Update email`、没有 `Send verification email`，属于社区里已有多例的账号状态不一致问题（参见 [Error 10034: Workers deployment blocked, but no email verification option](https://community.cloudflare.com/t/error-10034-workers-deployment-blocked-but-no-email-verification-option/945945/2) 与 [Email verification mismatch blocks Workers/Pages (10034, 8000077)](https://community.cloudflare.com/t/email-verification-mismatch-blocks-workers-pages-10034-8000077/940511/2)）。
+
+**解决办法（按推荐顺序）**：
+
+1. **先确认邮箱真的收到过验证邮件**：登录 QQ 邮箱，查收件箱 / 垃圾箱 / 广告邮件 / 订阅邮件，找发件人含 `cloudflare` 的邮件，点里面的验证链接（保持 Cloudflare 已登录状态点）。这一步做完 5 分钟后重试 `deploy.cmd` 即可。
+2. **重新触发验证邮件**：<https://dash.cloudflare.com/profile> → **Email** 卡片 → **Update email** → 重新填入同一个邮箱（或换成一个确定能收到 Cloudflare 邮件、且已启用的邮箱，例如 Gmail / 163）→ 提交后 Cloudflare 会往新地址发验证链接 → 点链接完成验证。
+3. **联系 Cloudflare 支持**：控制台右上角 **Support** → 提交工单，正文贴上面两行错误码（`8000077` / `10034`）与账号邮箱，说明"My Profile 中没有 Send verification email 入口"。
+4. 极端情况可换一个已验证邮箱的账号（例如用 GitHub / Google 登录 Cloudflare，服务商侧邮箱通常视为已验证），然后重新执行 `npx wrangler login --device` 与本 README 第五节的初始化步骤。
+
+验证生效后，`.\deploy.cmd` 会直接产出 `https://my-portfolio.zx969.workers.dev`（workers.dev 子域名 `zx969` 已经注册好了）。
 
 ---
 
-## 五、技术说明
+## 五、首次部署记录（换电脑时才需要重做）
+
+1. `npm install` —— 安装 wrangler。
+2. 登录 Cloudflare：`npx wrangler login --device`，浏览器里打开提示链接输入设备码授权。
+   凭据保存在项目内的 `.cf-config/`（已加入 `.gitignore`，**不要把整个文件夹打包发给别人**）。
+3. `.\deploy.cmd` 部署 Worker；或 `.\deploy-pages.cmd` 部署 Pages（Pages 需要先能创建项目）。
+
+---
+
+## 六、技术说明
 
 - 无框架、无外链字体/CDN，离线也能打开；首屏只有 HTML + 一份 CSS + 一份 JS。
 - 响应式：`720px`（卡片两列）、`1000px`（横向导航，隐藏汉堡按钮）。
 - 支持 `prefers-color-scheme: dark`（跟随系统深色模式）与 `prefers-reduced-motion`。
 - 无障碍：跳转主要内容链接、`aria-expanded` 菜单状态、可见焦点框。
-- `.cf-config/`、`node_modules/`、`_deploy/`、`_tools/` 均不会提交到仓库。
+- `.cf-config/`、`node_modules/`、`_deploy/`、`_tools/`、`_probe/`、`_npm-cache/` 均不会提交到仓库。

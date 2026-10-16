@@ -1,0 +1,10 @@
+{
+  // Cloudflare Worker（纯静态资源模式）：不需要打包、不需要构建步骤，
+  // 直接把 _deploy 目录（index.html + assets/）作为静态资源发布。
+  "name": "my-portfolio",
+  "compatibility_date": "2026-10-16",
+  "workers_dev": true,
+  "assets": {
+    "directory": "./_deploy"
+  }
+}
