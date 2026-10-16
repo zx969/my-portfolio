@@ -1,0 +1,17 @@
+# 本地工具与缓存（不会提交）
+node_modules/
+_npm-cache/
+_tools/
+_deploy/
+_probe/
+.cf-config/
+.wrangler/
+
+# 本地临时文件
+新建 文本文档.txt
+
+# 系统文件
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
