@@ -28,7 +28,7 @@ dir /b /s "_deploy" | findstr /v /c:"_deploy\\"
 echo.
 echo Ensuring Pages project exists: my-portfolio
 node "%WRANGLER%" pages project create my-portfolio --production-branch=main 2>nul
-echo (already exists -> ignore the error above)
+echo (if the project already exists, the error above can be ignored)
 echo.
 echo Deploying to Cloudflare Pages project: my-portfolio
 node "%WRANGLER%" pages deploy "_deploy" --project-name=my-portfolio --branch=main --commit-dirty=true
