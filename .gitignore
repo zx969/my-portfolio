@@ -7,6 +7,11 @@ _probe/
 .cf-config/
 .wrangler/
 
+# 截图与作业文档（本地生成，含个人信息，不入公开仓库）
+_shots/
+_shot-*.html
+个人作品集网站*.docx
+
 # 本地临时文件
 新建 文本文档.txt
 my-portfolio-site.zip
