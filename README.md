@@ -3,8 +3,9 @@
 极简静态个人作品集网站：纯 HTML / CSS / JS，无框架、无构建步骤、手机端适配。
 部署于 **Cloudflare Pages**，源码托管在 **GitHub**。
 
-- 线上地址：`https://my-portfolio.pages.dev`（首次部署后生效）
 - GitHub：<https://github.com/zx969/my-portfolio>
+- 线上地址（主）：`https://my-portfolio.pages.dev` —— Cloudflare Pages，待账号邮箱验证完成后生效
+- 线上地址（备用）：`https://zx969.github.io/my-portfolio/` —— GitHub Pages，同一份代码的镜像
 
 ```
 .
